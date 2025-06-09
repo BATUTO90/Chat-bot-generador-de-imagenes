@@ -1,0 +1,138 @@
+# ============================
+# Generador Visual de Prompts + Fooocus + Stable Diffusion en Google Colab (ESPAÑOL)
+# ============================
+
+from IPython.display import display, HTML, clear_output
+import ipywidgets as widgets
+import random
+
+# --- Listas para prompts variados ---
+colores_base = [
+    "rojo", "negro", "blanco", "azul", "rosa", "morado", "verde", "amarillo", "naranja",
+    "gris", "burdeos", "esmeralda", "marino", "crema", "plateado", "dorado"
+]
+tipos_bragas = [
+    "tanga", "bikini", "culotte", "hipster", "shorty", "g-string", "tanga brasileña",
+    "braga de encaje", "francesa", "talle alto"
+]
+entornos = [
+    "dormitorio acogedor", "salón lujoso", "calle concurrida", "parque sereno", "cafetería vintage",
+    "galería de arte moderna", "biblioteca tranquila", "bar en azotea", "playa al atardecer",
+    "sendero en el bosque", "callejón lluvioso", "jardín suburbano", "vagón de metro vacío",
+    "paisaje desértico", "montaña nevada", "edificio abandonado", "lounge de discoteca",
+    "campus universitario", "suite de hotel", "carretera campestre"
+]
+poses = [
+    "mirada seductora", "apoyada de manera casual", "estiramiento juguetón", "caminar con confianza",
+    "descansando relajada", "mirada curiosa", "movimiento dinámico", "contemplación pensativa",
+    "mirada coqueta sobre el hombro", "de pie elegantemente", "sentada con gracia", "arrodillada suavemente",
+    "alcanzando hacia arriba", "inclinándose", "bailando ligeramente", "pose dramática",
+    "alejándose mirando atrás", "interacción espontánea", "mirando por la ventana", "ajustando la ropa discretamente"
+]
+narrativos = [
+    "un deseo oculto revelado", "un momento fugaz de vulnerabilidad", "un encuentro inesperado",
+    "una historia no contada en su mirada", "el atractivo de lo prohibido", "un susurro de intimidad",
+    "un secreto juguetón compartido", "una declaración audaz de confianza", "el lenguaje no hablado de la atracción",
+    "un baile de sombras y luz", "un escape sereno de la realidad", "la emoción del descubrimiento",
+    "un misterio cautivador desarrollándose", "un toque de travesura", "un momento de autorreflexión",
+    "el magnetismo de su presencia", "un indicio de rebeldía", "la elegancia de la simplicidad",
+    "una muestra atrevida de encanto", "una invitación seductora"
+]
+acciones = [
+    "ajustando su falda", "agachándose para recoger algo", "sentándose con gracia",
+    "cruzando las piernas de forma atractiva", "estirándose provocativamente", "apoyada en una pared",
+    "caminando casualmente", "alcanzando un objeto en un estante alto", "atándose los zapatos",
+    "arreglándose el cabello", "leyendo un libro con atención", "bebiendo una bebida", "mirando su teléfono",
+    "hablando con alguien fuera de cámara", "bailando con música", "jugando con sus accesorios",
+    "mirándose en el espejo", "arreglando flores", "escribiendo en una libreta", "soñando despierta junto a la ventana"
+]
+angulos = [
+    "primer plano", "plano medio", "plano general", "ángulo bajo", "ángulo alto", "cenital", "picado", "contrapicado"
+]
+encuadres = [
+    "vertical", "horizontal", "cenital", "picado", "contrapicado"
+]
+ropa = [
+    "minifalda corta", "vestido largo de seda", "chaqueta de cuero", "top de encaje", "blusa transparente",
+    "camisa blanca oversize", "pantalón ajustado", "falda plisada", "crop top", "blazer elegante"
+]
+accesorios = [
+    "sombrero elegante", "gafas de sol", "collar de perlas", "pulsera de plata", "anillo llamativo",
+    "pendientes grandes", "bufanda de seda", "bolso de mano", "cinturón ancho", "guantes de encaje"
+]
+
+desc_tecnica = (
+    "Fotografía profesional de alta resolución, estilo documental hiperrealista y voyeurista. "
+    "Plano de cuerpo entero, la modelo llena el encuadre sin recortes, cámara SLR analógica simulada (grano fino ISO 800), "
+    "lente 85mm, balance de blancos cálido (6500K), colores vibrantes, nitidez absoluta. "
+    "Iluminación perfecta, sin sombras molestas. Ángulo estratégico para captar el instante en que la modelo insinúa intencionadamente su ropa interior de encaje. "
+    "Incluye detalles naturales: mechón de cabello suelto, medias ligeramente arrugadas, brillo natural de la piel. "
+    "Maquillaje impecable pero natural. Hiperrealista, ultra detallado, cinematográfico, sin estilización."
+)
+negative_prompt = (
+    "baja calidad, anime, dibujo infantil, desnudez total, expresiones vulgares, fondos digitales falsos, "
+    "iluminación plana, sombras mal renderizadas, deformidades anatómicas, ropa interior genérica"
+)
+
+# --- Generador visual de prompts ---
+nombre_box = widgets.Text(
+    value='',
+    placeholder='Escribe nombre o breve descripción',
+    description='Nombre:',
+    layout=widgets.Layout(width='80%')
+)
+boton_generar = widgets.Button(
+    description='Generar Prompt',
+    button_style='success',
+    layout=widgets.Layout(width='100%')
+)
+salida_prompt = widgets.Output()
+prompt_box = widgets.Textarea(
+    value='',
+    description='Prompt generado:',
+    layout=widgets.Layout(width='100%', height='120px')
+)
+
+def generar_prompt(_):
+    with salida_prompt:
+        clear_output()
+        nombre = nombre_box.value.strip()
+        color = random.choice(colores_base)
+        tipo_braga = random.choice(tipos_bragas)
+        entorno = random.choice(entornos)
+        pose = random.choice(poses)
+        accion = random.choice(acciones)
+        narrativo = random.choice(narrativos)
+        angulo = random.choice(angulos)
+        encuadre = random.choice(encuadres)
+        vestuario = random.choice(ropa)
+        accesorio = random.choice(accesorios)
+        medias = random.choice([
+            "medias hasta el muslo",
+            "pantimedias translúcidas",
+            "piernas desnudas de piel clara"
+        ])
+
+        prompt = (
+            f"{nombre}: {pose}, {accion}, ángulo: {angulo}, encuadre: {encuadre}, "
+            f"vistiendo {vestuario} y {accesorio} con {color} {tipo_braga} de encaje insinuada, "
+            f"entorno: {entorno}, {medias}. "
+            f"Detalle narrativo: {narrativo}. "
+            f"{desc_tecnica}"
+        )
+        prompt_box.value = prompt
+        display(HTML(f"""
+        <div style='background:#222; color:#1de9b6; border-radius:10px; padding:18px; font-size:1.05em; margin-top:18px;'>
+            <button onclick="navigator.clipboard.writeText(`{prompt}`)" style='background-color:#00bcd4; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; float:right;'>Copiar Prompt</button>
+            <b style='color:#00bcd4;'>Prompt generado</b><br>
+            <span style='white-space:pre-wrap;'>{prompt}</span>
+        </div>
+        """))
+
+boton_generar.on_click(generar_prompt)
+
+# Mostrar la interfaz
+display(nombre_box)
+display(boton_generar)
+display(prompt_box)
+display(salida_prompt)
