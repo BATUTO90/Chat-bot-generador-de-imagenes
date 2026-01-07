@@ -1,0 +1,1 @@
+!pip install gradio requests Pillow nest-asyncio
